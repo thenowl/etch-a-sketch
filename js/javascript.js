@@ -1,25 +1,28 @@
+const sidebar = document.querySelector("#sidebar");
+const randomButton = document.querySelector("#randomButton");
+const eraseButton = document.querySelector("#eraseButton");
+const layoutButton = document.querySelector("#layoutButton");
+const gridSizeInput = document.querySelector("#gridSize");
+const resetButton = document.querySelector("#resetButton");
 const gridContainer = document.querySelector("#gridContainer");
-const button = document.querySelector("button");
-const body = document.body;
 // Default settings:
-let numOfXSquares = 16;
-let numOfYSquares = 16;
+let numOfSquares = 16;
 
 // Create grid, add a class for CSS styling and assign IDs to each square:
 
-function gridCreator(numOfXSquares, numOfYSquares) {
+function gridCreator(numOfSquares) {
   // Clear grid before creation:
   let removeSquares = document
     .querySelectorAll(".square")
     .forEach((e) => e.remove());
 
-  for (let i = 0; i < numOfXSquares; i++) {
-    for (let j = 0; j < numOfYSquares; j++) {
+  for (let i = 0; i < numOfSquares; i++) {
+    for (let j = 0; j < numOfSquares; j++) {
       let square = document.createElement("div");
       square.classList.add("square");
-      square.setAttribute("id", `square${i}${j}`);
-      square.style.cssText = `width: ${100 / numOfXSquares}%; height: ${
-        100 / numOfYSquares
+      // square.setAttribute("id", `square${i}${j}`);
+      square.style.cssText = `width: ${100 / numOfSquares}%; height: ${
+        100 / numOfSquares
       }%;`;
       gridContainer.appendChild(square);
     }
@@ -28,35 +31,62 @@ function gridCreator(numOfXSquares, numOfYSquares) {
 
 // Default initialization:
 
-gridCreator(numOfXSquares, numOfYSquares);
+gridCreator(numOfSquares);
 
-// Identify square within the gridContainer with its ID and change to random color:
+// Checking mouse-states:
+
+let isMouseDown = false;
+
+gridContainer.addEventListener("mousedown", (event) => {
+  event.preventDefault();
+  isMouseDown = true;
+});
+
+gridContainer.addEventListener("mouseup", () => (isMouseDown = false));
+
+// Change color of squares:
 
 gridContainer.addEventListener("mouseover", (event) => {
   let target = event.target;
 
-  target.style.background = `rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`;
+  if (target.getAttribute("class") === "square") {
+    if (event.type === "mouseover" && !isMouseDown) return;
+    if (randomColorPicker === true) {
+      target.style.background = randomColor(randomNumber);
+    } else if (erasePicker === true) {
+      target.style.background = "inherit";
+    }
+  }
 });
 
-// Create random number between 0 - 255 for random RGB value:
+// Random color generator:
+let randomColorPicker = false;
 
-function randomColor() {
+randomButton.addEventListener("click", () => {
+  randomColorPicker = true;
+  erasePicker = false;
+});
+
+function randomNumber() {
   return Math.floor(Math.random() * 256);
 }
 
-// Revert color back to white when mouse leaves the square:
+function randomColor(randomNumber) {
+  return `rgb(${randomNumber()}, ${randomNumber()}, ${randomNumber()})`;
+}
 
-gridContainer.addEventListener("mouseout", (event) => {
-  let target = event.target;
+// Color eraser:
 
-  target.style.background = "whitesmoke";
+let erasePicker = false;
+
+eraseButton.addEventListener("click", () => {
+  erasePicker = true;
+  randomColorPicker = false;
 });
 
 // Event listener for grid-layout-button:
 
-button.addEventListener("click", popUpWindow);
-
-// Function to create pop up window upon button click:
+layoutButton.addEventListener("click", popUpWindow);
 
 function popUpWindow() {
   let popUp = document.createElement("div");
@@ -69,54 +99,42 @@ function popUpWindow() {
   let inputContainer = document.createElement("div");
   inputContainer.classList.add("input-container");
 
-  let xInputContainer = document.createElement("div");
-  xInputContainer.classList.add("x-input-container");
+  let numOfSquaresLabel = document.createElement("label");
+  numOfSquaresLabel.setAttribute("for", "numOfSquaresInput");
+  numOfSquaresLabel.textContent = "Number of squares:";
+  inputContainer.appendChild(numOfSquaresLabel);
 
-  let xSquaresLabel = document.createElement("label");
-  xSquaresLabel.setAttribute("for", "numberOfXSquares");
-  xSquaresLabel.textContent = "Number of squares on x-axis:";
-  xInputContainer.appendChild(xSquaresLabel);
-
-  let xSquares = document.createElement("input");
-  xSquares.setAttribute("id", "xSquares");
-  xSquares.setAttribute("name", "numberOfXSquares");
-  xSquares.setAttribute("type", "number");
-  xSquares.setAttribute("min", "1");
-  xSquares.setAttribute("max", "100");
-  xInputContainer.appendChild(xSquares);
-
-  inputContainer.appendChild(xInputContainer);
-
-  let yInputContainer = document.createElement("div");
-  yInputContainer.classList.add("y-input-container");
-
-  let ySquaresLabel = document.createElement("label");
-  ySquaresLabel.setAttribute("for", "numberOfYSquares");
-  ySquaresLabel.textContent = "Number of squares on y-axis:";
-  yInputContainer.appendChild(ySquaresLabel);
-
-  let ySquares = document.createElement("input");
-  ySquares.setAttribute("id", "ySquares");
-  ySquares.setAttribute("name", "numberOfYSquares");
-  ySquares.setAttribute("type", "number");
-  ySquares.setAttribute("min", "1");
-  ySquares.setAttribute("max", "100");
-  yInputContainer.appendChild(ySquares);
-
-  inputContainer.appendChild(yInputContainer);
+  let numOfSquaresInput = document.createElement("input");
+  numOfSquaresInput.setAttribute("value", `${numOfSquares}`);
+  numOfSquaresInput.setAttribute("id", "numOfSquaresInput");
+  numOfSquaresInput.setAttribute("name", "numOfSquaresInput");
+  numOfSquaresInput.setAttribute("type", "number");
+  numOfSquaresInput.setAttribute("min", "1");
+  numOfSquaresInput.setAttribute("max", "100");
+  inputContainer.appendChild(numOfSquaresInput);
 
   popUp.appendChild(inputContainer);
 
   let submit = document.createElement("input");
   submit.setAttribute("type", "submit");
   submit.classList.add("submit-button");
-  submit.innerText = "Submit";
+  submit.setAttribute("value", "Submit");
   submit.addEventListener("click", () => {
-    numOfXSquares = document.querySelector("#xSquares").value;
-    numOfYSquares = document.querySelector("#ySquares").value;
-    gridCreator(numOfXSquares, numOfYSquares);
-    body.removeChild(popUp);
+    numOfSquares = document.querySelector("#numOfSquaresInput").value;
+    gridCreator(numOfSquares);
+    sidebar.removeChild(popUp);
   });
   popUp.appendChild(submit);
-  body.insertBefore(popUp, gridContainer);
+  sidebar.appendChild(popUp);
 }
+
+// Stretch the grid:
+
+gridSizeInput.addEventListener("input", () => {
+  let gridSize = parseInt(document.querySelector("#gridSize").value);
+  gridContainer.style.cssText = `width: ${gridSize}%; height:${gridSize}%`;
+});
+
+// Reset canvas:
+
+resetButton.addEventListener("click", () => gridCreator(numOfSquares));

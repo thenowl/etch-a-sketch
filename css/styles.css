@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap");
+
 * {
   padding: 0;
   margin: 0;
@@ -5,43 +7,128 @@
 }
 
 body {
+  font-family: Tangerine, sans-serif;
+  background: #333;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   position: relative;
   width: 100vw;
   height: 100vh;
   text-align: center;
-  background: whitesmoke;
-  padding: 20px;
 }
 
-.layout-button {
-  align-self: center;
-  font-size: 1.2rem;
-  background: #333;
+header {
+  background: linear-gradient(rgb(20, 20, 20), #333);
   color: whitesmoke;
-  padding: 5px 20px;
+  font-size: 3rem;
+  padding: 30px;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+  border-radius: 0 0 20px;
+
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 5px whitesmoke, 0 0 10px whitesmoke, 0 0 15px orange,
+      0 0 20px orange, 0 0 30px orange, 0 0 40px orange, 0 0 50px orange;
+  }
+  to {
+    text-shadow: 0 0 10px whitesmoke, 0 0 20px rgb(255, 192, 75),
+      0 0 25px rgb(255, 192, 75), 0 0 30px rgb(255, 192, 75),
+      0 0 40px rgb(255, 192, 75), 0 0 50px rgb(255, 192, 75),
+      0 0 60px rgb(255, 192, 75);
+  }
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  background: #1f1f1f;
+}
+
+.sidebar {
+  background: linear-gradient(#333, rgb(20, 20, 20));
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 250px;
+  gap: 20px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
+  border-radius: 0 0 20px 0;
+  z-index: 2;
+}
+
+button {
+  font-family: inherit;
+  font-size: 3rem;
+  background: radial-gradient(#333, rgb(20, 20, 20));
+  color: orange;
+  text-shadow: 2px 3px 10px rgba(255, 165, 0, 0.8);
+  padding: 10px;
   border: 1px solid whitesmoke;
   border-radius: 10px;
-  box-shadow: 0 5px 20px rgb(51, 51, 51, 0.6);
-  margin-bottom: 40px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
 }
 
-.layout-button:active {
+button:active {
   box-shadow: none;
 }
 
-.grid-container {
+.sidebar fieldset {
+  background: radial-gradient(#333, rgb(20, 20, 20));
+  padding: 5px 10px 10px 10px;
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+}
+
+.sidebar legend {
+  color: orange;
+  text-shadow: 2px 3px 10px rgba(255, 165, 0, 0.8);
+  font-size: 2.5rem;
+}
+
+.grid-size {
+  appearance: none;
+  outline: none;
+  accent-color: #333;
+  background: orange;
+  color: whitesmoke;
+  box-shadow: 0 0 10px orange;
+  border: none;
+  border-radius: 5px;
+}
+
+.grid-align {
+  background: radial-gradient(#333, rgb(20, 20, 20));
   flex: 1;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+  margin: 20px;
+}
+
+.grid-container {
+  background: #333;
+  width: 70%;
+  height: 70%;
+  display: flex;
   flex-wrap: wrap;
+  padding: 20px;
+  border: 3px solid whitesmoke;
+  box-shadow: 0 0 15px rgb(245, 245, 245, 0.3);
 }
 
 .square {
   width: 6.25%;
   height: 6.25%;
-  /* border: 1px solid black; */
 }
 
 .pop-up-window {
@@ -50,8 +137,8 @@ body {
   justify-content: center;
   gap: 20px;
   position: absolute;
-  bottom: 30vw;
-  left: 50%;
+  bottom: 20vw;
+  left: 10%;
   transform: translateX(-50%);
   background: #333;
   color: whitesmoke;
@@ -64,20 +151,16 @@ body {
 
 .input-container {
   display: flex;
-  justify-content: space-evenly;
-  gap: 40px;
-}
-
-.x-input-container,
-.y-input-container {
-  display: flex;
   flex-direction: column;
   font-size: 1rem;
   gap: 10px;
 }
 
-.x-input-container input,
-.y-input-container input {
+.input-container label {
+  align-self: flex-start;
+}
+
+.input-container input {
   flex: 1;
   font-size: 1.2rem;
   text-align: center;

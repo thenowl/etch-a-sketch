@@ -9,9 +9,26 @@
 </head>
 
 <body>
-  <button class="layout-button">Change grid layout</button>
-  <div class="grid-container" id="gridContainer"></div>
-  <script src="./js/javascript.js"></script>
+  <header>
+    <h1 class="glow">Etch a Sketch</h1>
+  </header>
+  <main>
+    <div id="sidebar" class="sidebar">
+
+      <button id="randomButton" class="erase-button">Random Color</button>
+      <button id="eraseButton" class="erase-button">Erase</button>
+      <button id="resetButton">Reset</button>
+      <button id="layoutButton" class="layout-button">Grid Layout</button>
+      <fieldset>
+        <legend for="gridSize">Stretch Canvas</legend>
+        <input class="grid-size" id="gridSize" type="range" value="70" min="40" max="100">
+      </fieldset>
+    </div>
+    <div class="grid-align">
+      <div id="gridContainer" class="grid-container"></div>
+    </div>
+    <script src="./js/javascript.js"></script>
+  </main>
 </body>
 
 </html>
