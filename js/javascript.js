@@ -22,7 +22,6 @@ function gridCreator(numOfSquares) {
     for (let j = 0; j < numOfSquares; j++) {
       let square = document.createElement("div");
       square.classList.add("square");
-      // square.setAttribute("id", `square${i}${j}`);
       square.style.cssText = `width: ${100 / numOfSquares}%; height: ${
         100 / numOfSquares
       }%;`;
