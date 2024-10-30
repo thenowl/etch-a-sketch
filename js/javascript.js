@@ -1,4 +1,6 @@
 const sidebar = document.querySelector("#sidebar");
+const pickColorContainer = document.querySelector("#pickColorContainer");
+const chooseColorInput = document.querySelector("#chooseColorInput");
 const randomButton = document.querySelector("#randomButton");
 const eraseButton = document.querySelector("#eraseButton");
 const layoutButton = document.querySelector("#layoutButton");
@@ -55,16 +57,48 @@ gridContainer.addEventListener("mouseover", (event) => {
       target.style.background = randomColor(randomNumber);
     } else if (erasePicker === true) {
       target.style.background = "inherit";
+    } else if (colorPicker === true) {
+      target.style.background = chooseColorInput.value;
     }
   }
 });
 
+// Choose color:
+
+let colorPicker = false;
+
+chooseColorInput.addEventListener("click", () => {
+  colorPicker = true;
+  randomColorPicker = false;
+  erasePicker = false;
+
+  pickColorContainer.style.cssText =
+    "box-shadow: none; background: radial-gradient(#333, #000)";
+  randomButton.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+  eraseButton.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+
+  gridContainer.focus();
+});
+
 // Random color generator:
+
 let randomColorPicker = false;
 
 randomButton.addEventListener("click", () => {
+  colorPicker = false;
   randomColorPicker = true;
   erasePicker = false;
+
+  pickColorContainer.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+  randomButton.style.cssText =
+    "box-shadow: none; background: radial-gradient(#333, #000)";
+  eraseButton.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+
+  gridContainer.focus();
 });
 
 function randomNumber() {
@@ -80,52 +114,68 @@ function randomColor(randomNumber) {
 let erasePicker = false;
 
 eraseButton.addEventListener("click", () => {
+  colorPicker = false;
   erasePicker = true;
   randomColorPicker = false;
+
+  pickColorContainer.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+  eraseButton.style.cssText =
+    "box-shadow: none; background: radial-gradient(#333, #000)";
+  randomButton.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+
+  gridContainer.focus();
 });
 
 // Event listener for grid-layout-button:
 
 layoutButton.addEventListener("click", popUpWindow);
 
+// Pop-up window generator:
+
+let isPopUpOpen = false;
+
 function popUpWindow() {
-  let popUp = document.createElement("div");
-  popUp.classList.add("pop-up-window");
+  if (isPopUpOpen) {
+    return;
+  } else {
+    let popUp = document.createElement("div");
+    popUp.classList.add("pop-up-window");
 
-  let instructions = document.createElement("p");
-  instructions.textContent = "Set the number of squares per side:";
-  popUp.appendChild(instructions);
+    let inputContainer = document.createElement("div");
+    inputContainer.classList.add("input-container");
 
-  let inputContainer = document.createElement("div");
-  inputContainer.classList.add("input-container");
+    let numOfSquaresLabel = document.createElement("label");
+    numOfSquaresLabel.setAttribute("for", "numOfSquaresInput");
+    numOfSquaresLabel.textContent = "Set number of squares";
+    inputContainer.appendChild(numOfSquaresLabel);
 
-  let numOfSquaresLabel = document.createElement("label");
-  numOfSquaresLabel.setAttribute("for", "numOfSquaresInput");
-  numOfSquaresLabel.textContent = "Number of squares:";
-  inputContainer.appendChild(numOfSquaresLabel);
+    let numOfSquaresInput = document.createElement("input");
+    numOfSquaresInput.setAttribute("value", `${numOfSquares}`);
+    numOfSquaresInput.setAttribute("id", "numOfSquaresInput");
+    numOfSquaresInput.setAttribute("name", "numOfSquaresInput");
+    numOfSquaresInput.setAttribute("type", "number");
+    numOfSquaresInput.setAttribute("min", "1");
+    numOfSquaresInput.setAttribute("max", "100");
+    inputContainer.appendChild(numOfSquaresInput);
 
-  let numOfSquaresInput = document.createElement("input");
-  numOfSquaresInput.setAttribute("value", `${numOfSquares}`);
-  numOfSquaresInput.setAttribute("id", "numOfSquaresInput");
-  numOfSquaresInput.setAttribute("name", "numOfSquaresInput");
-  numOfSquaresInput.setAttribute("type", "number");
-  numOfSquaresInput.setAttribute("min", "1");
-  numOfSquaresInput.setAttribute("max", "100");
-  inputContainer.appendChild(numOfSquaresInput);
+    popUp.appendChild(inputContainer);
 
-  popUp.appendChild(inputContainer);
-
-  let submit = document.createElement("input");
-  submit.setAttribute("type", "submit");
-  submit.classList.add("submit-button");
-  submit.setAttribute("value", "Submit");
-  submit.addEventListener("click", () => {
-    numOfSquares = document.querySelector("#numOfSquaresInput").value;
-    gridCreator(numOfSquares);
-    sidebar.removeChild(popUp);
-  });
-  popUp.appendChild(submit);
-  sidebar.appendChild(popUp);
+    let submit = document.createElement("input");
+    submit.setAttribute("type", "submit");
+    submit.classList.add("submit-button");
+    submit.setAttribute("value", "Submit");
+    popUp.appendChild(submit);
+    sidebar.appendChild(popUp);
+    isPopUpOpen = true;
+    submit.addEventListener("click", () => {
+      numOfSquares = document.querySelector("#numOfSquaresInput").value;
+      gridCreator(numOfSquares);
+      isPopUpOpen = false;
+      sidebar.removeChild(popUp);
+    });
+  }
 }
 
 // Stretch the grid:
@@ -137,4 +187,16 @@ gridSizeInput.addEventListener("input", () => {
 
 // Reset canvas:
 
-resetButton.addEventListener("click", () => gridCreator(numOfSquares));
+resetButton.addEventListener("click", () => {
+  colorPicker = false;
+  randomColorPicker = false;
+  erasePicker = false;
+
+  pickColorContainer.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+  eraseButton.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+  randomButton.style.cssText =
+    "box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8); background: radial-gradient(#333, rgb(20, 20, 20))";
+  gridCreator(numOfSquares);
+});

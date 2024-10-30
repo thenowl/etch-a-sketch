@@ -15,11 +15,15 @@
   <main>
     <div id="sidebar" class="sidebar">
 
+      <fieldset id="pickColorContainer" class="pick-color-container">
+        <legend>Pick a Color</legend>
+        <input id="chooseColorInput" class="choose-color-input" type="color">
+      </fieldset>
       <button id="randomButton" class="erase-button">Random Color</button>
       <button id="eraseButton" class="erase-button">Erase</button>
       <button id="resetButton">Reset</button>
       <button id="layoutButton" class="layout-button">Grid Layout</button>
-      <fieldset>
+      <fieldset class="grid-size-container">
         <legend for="gridSize">Stretch Canvas</legend>
         <input class="grid-size" id="gridSize" type="range" value="70" min="40" max="100">
       </fieldset>
